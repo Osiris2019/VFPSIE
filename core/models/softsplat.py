@@ -217,14 +217,27 @@ def cuda_kernel(strFunction:str, strKernel:str, objVariables:typing.Dict):
 
 
 @cupy.memoize(for_each_device=True)
+'''
 def cuda_launch(strKey:str):
     if 'CUDA_HOME' not in os.environ:
         os.environ['CUDA_HOME'] = cupy.cuda.get_cuda_path()
     # end
 
-    return cupy.RawModule(objCudacache[strKey]['strKernel'], tuple(['-I ' + os.environ['CUDA_HOME'], '-I ' + os.environ['CUDA_HOME'] + '/include'])).get_function(objCudacache[strKey]['strFunction'])
+    return cupy.cuda.compile(objCudacache[strKey]['strKernel'], tuple(['-I ' + os.environ['CUDA_HOME'], '-I ' + os.environ['CUDA_HOME'] + '/include'])).get_function(objCudacache[strKey]['strFunction'])
 # end
+'''
+def cuda_launch(strKey: str):
+    if 'CUDA_HOME' not in os.environ:
+        os.environ['CUDA_HOME'] = cupy.cuda.get_cuda_path()
 
+    # Compile the kernel using cupy.RawModule instead of compile_with_cache
+    kernel_code = objCudacache[strKey]['strKernel']
+    module = cupy.RawModule(code=kernel_code, options=('-I', os.environ['CUDA_HOME'], '-I', os.environ['CUDA_HOME'] + '/include'))
+    
+    # Get the kernel function from the compiled module
+    kernel_function = module.get_function(objCudacache[strKey]['strFunction'])
+
+    return kernel_function
 
 ##########################################################
 
