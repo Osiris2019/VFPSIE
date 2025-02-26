@@ -1,6 +1,5 @@
 import torch
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = '7'
 os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["MKL_NUM_THREADS"] = "1"
 
