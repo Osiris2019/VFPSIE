@@ -7,6 +7,6 @@ pandas
 tensorboard
 einops
 timm
-cupy-cuda11x
+cupy-cuda12x
 imgaug
 
