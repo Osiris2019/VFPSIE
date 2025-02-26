@@ -39,7 +39,7 @@ if __name__ == '__main__':
     ckpt_path = args.ckpt_path
 
     # load model
-    model = Model().to(device)
+    model = Model().to(torch.device("cuda" if torch.cuda.is_available() else "cpu"))
     raw_model = torch.load(ckpt_path, map_location='cpu')
     model.load_state_dict({k.replace('module.', ''): v for k, v in raw_model.items()})
     model = model.eval()
